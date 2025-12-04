@@ -4,6 +4,7 @@
 ".\objects\packunpack.o"
 ".\objects\prochostcmd.o"
 ".\objects\senddatatohost.o"
+".\objects\ecg.o"
 ".\objects\rcc.o"
 ".\objects\timer.o"
 ".\objects\queue.o"

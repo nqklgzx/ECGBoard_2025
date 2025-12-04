@@ -1,0 +1,9 @@
+.\objects\ecg.o: ..\App\ECG\ECG.c
+.\objects\ecg.o: ..\App\ECG\ECG.h
+.\objects\ecg.o: ..\App\DataType\DataType.h
+.\objects\ecg.o: ..\HW\ADC\ADC.h
+.\objects\ecg.o: ..\HW\UART1\UART1.h
+.\objects\ecg.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\ecg.o: ..\APP\ProcHostCmd\ProcHostCmd.h
+.\objects\ecg.o: ..\APP\PackUnpack\PackUnpack.h
+.\objects\ecg.o: ..\App\SendDataToHost\SendDataToHost.h

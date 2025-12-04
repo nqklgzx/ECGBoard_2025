@@ -32,7 +32,7 @@
 #include "DAC.h"
 #include "SendDataToHost.h"
 #include "ADC.h"
-
+#include "ECG.h"
 /*********************************************************************************************************
 *                                              宏定义
 *********************************************************************************************************/
@@ -106,39 +106,14 @@ static  void  InitHardware(void)
 static  void  Proc2msTask(void)
 {
   u8  uart1RecData; //串口数据
-  u16 adcData;      //队列数据
-  float  waveData;     //波形数据
 
-  static u8 s_iCnt4 = 0;   //计数器
-  static u8 s_iPointCnt = 0;        //波形数据包的点计数器
-  static u8 s_arrWaveData[6] = {0}; //初始化数组
-  
   if(Get2msFlag())  //判断2ms标志状态
   { 
     if(ReadUART1(&uart1RecData, 1)) //读串口接收数据
     {       
       ProcHostCmd(uart1RecData);  //处理命令      
     }
-    
-    s_iCnt4++;  //计数增加
-
-    if(s_iCnt4 >= 4)  //达到8ms
-    {
-      if(ReadADCBuf(&adcData))  //从缓存队列中取出1个数据
-      {
-        waveData = (adcData * 3.3) / 4095;  //计算获取点的位置
-//        printf("%f\n",waveData);
-        s_arrWaveData[s_iPointCnt] = waveData;  //存放到数组
-        s_iPointCnt++;  //波形数据包的点计数器加1操作
-
-        if(s_iPointCnt >= 6)  //接收到5个点
-        {
-          s_iPointCnt = 0;  //计数器清零
-          SendECGWaveToHost(s_arrWaveData);  //发送波形数据包
-        }
-      }
-      s_iCnt4 = 0;  //准备下次的循环
-    }
+    ECG_Task();
        
     LEDFlicker(250);//调用闪烁函数     
     Clr2msFlag();   //清除2ms标志

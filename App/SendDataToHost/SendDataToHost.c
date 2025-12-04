@@ -111,21 +111,20 @@ void SendAckPack(u8 moduleId, u8 secondId, u8 ackMsg)
 * 输出参数：void
 * 返 回 值：void
 * 创建日期：2018年01月01日
-* 注    意：经过修改由五个数据修改为6个数据
+* 注    意：
 *********************************************************************************************************/
-void  SendECGWaveToHost(u8* pWaveData)
+void  SendWaveToHost(u8* pWaveData)
 {
   StructPackType  pt; //包结构体变量
   
-  pt.packModuleId = MODULE_ECG;    //wave模块的模块ID
-  pt.packSecondId = DAT_ECG_WAVE; //wave模块的二级ID
+  pt.packModuleId = MODULE_WAVE;    //wave模块的模块ID
+  pt.packSecondId = DAT_WAVE_WDATA; //wave模块的二级ID
   pt.arrData[0] = pWaveData[0]; //波形数据1
   pt.arrData[1] = pWaveData[1]; //波形数据2
   pt.arrData[2] = pWaveData[2]; //波形数据3
   pt.arrData[3] = pWaveData[3]; //波形数据4
   pt.arrData[4] = pWaveData[4]; //波形数据5
-  pt.arrData[5] = pWaveData[5]; //波形数据5
-  //pt.arrData[5] = 0;  //保留
+  pt.arrData[5] = 0;  //保留
 
   SendPackToHost(&pt);  //打包数据，并将数据发送到主机
 }

@@ -32,3 +32,4 @@
 .\objects\main.o: ..\HW\DAC\DAC.h
 .\objects\main.o: ..\App\SendDataToHost\SendDataToHost.h
 .\objects\main.o: ..\HW\ADC\ADC.h
+.\objects\main.o: ..\App\ECG\ECG.h
