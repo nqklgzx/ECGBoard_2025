@@ -35,7 +35,7 @@
 void  InitSendDataToHost(void);         //初始化SendDataToHost模块
 void  SendAckPack(u8 moduleId, u8 secondId, u8 ackMsg); //发送命令应答数据包
 
-void  SendWaveToHost(u8* pWaveData);    //发送波形数据包到主机，一次性发送5个点
+void  SendECGWaveToHost(u8* pWaveData);    //发送波形数据包到主机，一次性发送5个点
 
 #endif
 

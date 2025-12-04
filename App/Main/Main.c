@@ -90,7 +90,7 @@ static  void  InitHardware(void)
   InitTimer();        //初始化Timer模块
   InitLED();          //初始化LED模块
   InitSysTick();      //初始化SysTick模块
-  //InitDAC();          //初始化DAC模块
+  InitDAC();          //初始化DAC模块
   InitADC();          //初始化ADC模块
 }
 
@@ -111,13 +111,13 @@ static  void  Proc2msTask(void)
 
   static u8 s_iCnt4 = 0;   //计数器
   static u8 s_iPointCnt = 0;        //波形数据包的点计数器
-  static u8 s_arrWaveData[5] = {0}; //初始化数组
+  static u8 s_arrWaveData[6] = {0}; //初始化数组
   
   if(Get2msFlag())  //判断2ms标志状态
   { 
     if(ReadUART1(&uart1RecData, 1)) //读串口接收数据
     {       
-//      ProcHostCmd(uart1RecData);  //处理命令      
+      ProcHostCmd(uart1RecData);  //处理命令      
     }
     
     s_iCnt4++;  //计数增加
@@ -127,15 +127,15 @@ static  void  Proc2msTask(void)
       if(ReadADCBuf(&adcData))  //从缓存队列中取出1个数据
       {
         waveData = (adcData * 3.3) / 4095;  //计算获取点的位置
-        printf("%f\n",waveData);
-//        s_arrWaveData[s_iPointCnt] = waveData;  //存放到数组
-//        s_iPointCnt++;  //波形数据包的点计数器加1操作
+//        printf("%f\n",waveData);
+        s_arrWaveData[s_iPointCnt] = waveData;  //存放到数组
+        s_iPointCnt++;  //波形数据包的点计数器加1操作
 
-//        if(s_iPointCnt >= 5)  //接收到5个点
-//        {
-//          s_iPointCnt = 0;  //计数器清零
-//          SendWaveToHost(s_arrWaveData);  //发送波形数据包
-//        }
+        if(s_iPointCnt >= 6)  //接收到5个点
+        {
+          s_iPointCnt = 0;  //计数器清零
+          SendECGWaveToHost(s_arrWaveData);  //发送波形数据包
+        }
       }
       s_iCnt4 = 0;  //准备下次的循环
     }

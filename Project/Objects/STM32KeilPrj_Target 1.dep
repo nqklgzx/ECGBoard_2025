@@ -1,6 +1,6 @@
 Dependencies for Project 'STM32KeilPrj', Target 'Target 1': (DO NOT MODIFY !)
 CompilerVersion: 5060960::V5.06 update 7 (build 960)::.\ARMCC
-F (..\App\Main\Main.c)(0x692479C2)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\App\Main -I ..\App\DataType -I ..\HW\RCC -I ..\HW\Timer -I ..\HW\UART1 -I ..\FW\inc -I ..\ARM\NVIC -I ..\ARM\SysTick -I ..\ARM\System -I ..\App\LED -I ..\APP\PackUnpack -I ..\APP\ProcHostCmd -I ..\HW\DAC -I ..\HW\ADC -I ..\App\SendDataToHost-IC:\Users\NQK\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.3.0\Device\Include-D__UVISION_VERSION="536" -DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o .\objects\main.o --omf_browse .\objects\main.crf --depend .\objects\main.d)
+F (..\App\Main\Main.c)(0x692595CC)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\App\Main -I ..\App\DataType -I ..\HW\RCC -I ..\HW\Timer -I ..\HW\UART1 -I ..\FW\inc -I ..\ARM\NVIC -I ..\ARM\SysTick -I ..\ARM\System -I ..\App\LED -I ..\APP\PackUnpack -I ..\APP\ProcHostCmd -I ..\HW\DAC -I ..\HW\ADC -I ..\App\SendDataToHost-IC:\Users\NQK\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.3.0\Device\Include-D__UVISION_VERSION="536" -DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o .\objects\main.o --omf_browse .\objects\main.crf --depend .\objects\main.d)
 I (..\App\Main\Main.h)(0x5CE34F0B)
 I (..\ARM\System\stm32f10x_conf.h)(0x5CE3EAF2)
 I (..\FW\inc\stm32f10x_adc.h)(0x5A6556B6)
@@ -31,7 +31,7 @@ I (..\HW\DAC\Wave.h)(0x5CE35BCA)
 I (..\APP\ProcHostCmd\ProcHostCmd.h)(0x5CE3E3E7)
 I (..\APP\PackUnpack\PackUnpack.h)(0x5CE3E487)
 I (..\HW\DAC\DAC.h)(0x5CE35BEE)
-I (..\App\SendDataToHost\SendDataToHost.h)(0x5CE3E4E7)
+I (..\App\SendDataToHost\SendDataToHost.h)(0x692595CC)
 I (..\HW\ADC\ADC.h)(0x5CE3E5D5)
 F (..\App\LED\LED.c)(0x69252197)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\App\Main -I ..\App\DataType -I ..\HW\RCC -I ..\HW\Timer -I ..\HW\UART1 -I ..\FW\inc -I ..\ARM\NVIC -I ..\ARM\SysTick -I ..\ARM\System -I ..\App\LED -I ..\APP\PackUnpack -I ..\APP\ProcHostCmd -I ..\HW\DAC -I ..\HW\ADC -I ..\App\SendDataToHost-IC:\Users\NQK\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.3.0\Device\Include-D__UVISION_VERSION="536" -DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o .\objects\led.o --omf_browse .\objects\led.crf --depend .\objects\led.d)
 I (..\App\LED\LED.h)(0x5CE3E37E)
@@ -66,9 +66,9 @@ I (..\HW\UART1\UART1.h)(0x5CE2B64F)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x60252374)
 I (..\HW\DAC\DAC.h)(0x5CE35BEE)
 I (..\HW\DAC\Wave.h)(0x5CE35BCA)
-I (..\App\SendDataToHost\SendDataToHost.h)(0x5CE3E4E7)
-F (..\App\SendDataToHost\SendDataToHost.c)(0x5CE3E500)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\App\Main -I ..\App\DataType -I ..\HW\RCC -I ..\HW\Timer -I ..\HW\UART1 -I ..\FW\inc -I ..\ARM\NVIC -I ..\ARM\SysTick -I ..\ARM\System -I ..\App\LED -I ..\APP\PackUnpack -I ..\APP\ProcHostCmd -I ..\HW\DAC -I ..\HW\ADC -I ..\App\SendDataToHost-IC:\Users\NQK\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.3.0\Device\Include-D__UVISION_VERSION="536" -DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o .\objects\senddatatohost.o --omf_browse .\objects\senddatatohost.crf --depend .\objects\senddatatohost.d)
-I (..\App\SendDataToHost\SendDataToHost.h)(0x5CE3E4E7)
+I (..\App\SendDataToHost\SendDataToHost.h)(0x692595CC)
+F (..\App\SendDataToHost\SendDataToHost.c)(0x692595CC)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\App\Main -I ..\App\DataType -I ..\HW\RCC -I ..\HW\Timer -I ..\HW\UART1 -I ..\FW\inc -I ..\ARM\NVIC -I ..\ARM\SysTick -I ..\ARM\System -I ..\App\LED -I ..\APP\PackUnpack -I ..\APP\ProcHostCmd -I ..\HW\DAC -I ..\HW\ADC -I ..\App\SendDataToHost-IC:\Users\NQK\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.3.0\Device\Include-D__UVISION_VERSION="536" -DSTM32F10X_HD -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER-o .\objects\senddatatohost.o --omf_browse .\objects\senddatatohost.crf --depend .\objects\senddatatohost.d)
+I (..\App\SendDataToHost\SendDataToHost.h)(0x692595CC)
 I (..\App\DataType\DataType.h)(0x5CE34DC6)
 I (..\APP\PackUnpack\PackUnpack.h)(0x5CE3E487)
 I (..\HW\UART1\UART1.h)(0x5CE2B64F)
