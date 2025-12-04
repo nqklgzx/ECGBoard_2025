@@ -26,6 +26,8 @@
 #include "Timer.h"
 #include "UART1.h"
 #include "LED.h"
+#include "Wave.h"
+#include "ProcHostCmd.h"
 #include "PackUnpack.h"
 #include "DAC.h"
 #include "SendDataToHost.h"
@@ -66,6 +68,7 @@ static  void  Proc1SecTask(void);   //1s处理任务
 static  void  InitSoftware(void)
 {
   InitPackUnpack();       //初始化PackUnpack模块
+  InitProcHostCmd();      //初始化ProcHostCmd模块
   InitSendDataToHost();   //初始化SendDataToHost模块
 }
 
@@ -87,7 +90,7 @@ static  void  InitHardware(void)
   InitTimer();        //初始化Timer模块
   InitLED();          //初始化LED模块
   InitSysTick();      //初始化SysTick模块
-  InitDAC();          //初始化DAC模块
+  //InitDAC();          //初始化DAC模块
   InitADC();          //初始化ADC模块
 }
 
@@ -114,7 +117,7 @@ static  void  Proc2msTask(void)
   { 
     if(ReadUART1(&uart1RecData, 1)) //读串口接收数据
     {       
-      
+//      ProcHostCmd(uart1RecData);  //处理命令      
     }
     
     s_iCnt4++;  //计数增加

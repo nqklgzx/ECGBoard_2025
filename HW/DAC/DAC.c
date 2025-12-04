@@ -33,13 +33,14 @@
 /*********************************************************************************************************
 *                                              内部变量
 *********************************************************************************************************/
+static StructDACWave s_strDAC1WaveBuf;  //存储DAC1波形属性，包括波形地址和点数
 
 /*********************************************************************************************************
 *                                              内部函数声明
 *********************************************************************************************************/
 static  void ConfigTimer4(u16 arr, u16 psc);            //配置TIM4
 static  void ConfigDAC1(void);                          //配置DAC1
-static  void ConfigDMA2Ch3ForDAC1();  //配置DMA2通道3
+static  void ConfigDMA2Ch3ForDAC1(StructDACWave wave);  //配置DMA2通道3
                                           
 /*********************************************************************************************************
 *                                              内部函数实现
@@ -120,7 +121,7 @@ static  void ConfigDAC1(void)
 * 创建日期：2018年01月01日
 * 注    意：
 *********************************************************************************************************/
-static  void ConfigDMA2Ch3ForDAC1()
+static  void ConfigDMA2Ch3ForDAC1(StructDACWave wave)
 {  
   DMA_InitTypeDef   DMA_InitStructure;  //DMA_InitStructure用于存放DMA的参数
   NVIC_InitTypeDef  NVIC_InitStructure; //NVIC_InitStructure用于存放NVIC的参数
@@ -130,7 +131,9 @@ static  void ConfigDMA2Ch3ForDAC1()
   
   //配置DMA2_Channel3
   DMA_DeInit(DMA2_Channel3);  //将DMA1_CH1寄存器设置为默认值
-  DMA_InitStructure.DMA_PeripheralBaseAddr = DAC_DHR12R1_ADDR;     //设置外设地址                                            
+  DMA_InitStructure.DMA_PeripheralBaseAddr = DAC_DHR12R1_ADDR;     //设置外设地址
+  DMA_InitStructure.DMA_MemoryBaseAddr     = wave.waveBufAddr;     //设置存储器地址
+  DMA_InitStructure.DMA_BufferSize         = wave.waveBufSize;     //设置要传输的数据项数目                                              
   DMA_InitStructure.DMA_DIR                = DMA_DIR_PeripheralDST;//设置为存储器到外设模式
   DMA_InitStructure.DMA_PeripheralInc      = DMA_PeripheralInc_Disable;  //设置外设为非递增模式
   DMA_InitStructure.DMA_MemoryInc          = DMA_MemoryInc_Enable;       //设置存储器为递增模式
@@ -169,7 +172,7 @@ void DMA2_Channel3_IRQHandler(void)
     NVIC_ClearPendingIRQ(DMA2_Channel3_IRQn);  //清除DMA2_Channel3中断挂起
     DMA_ClearITPendingBit(DMA2_IT_GL3);        //清除DMA2_Channel3传输完成中断标志
 
-    ConfigDMA2Ch3ForDAC1();    //配置DMA2通道3
+    ConfigDMA2Ch3ForDAC1(s_strDAC1WaveBuf);    //配置DMA2通道3
   }
 }
 
@@ -187,7 +190,24 @@ void DMA2_Channel3_IRQHandler(void)
 *********************************************************************************************************/
 void InitDAC(void)
 {              
+  s_strDAC1WaveBuf.waveBufAddr  = (u32)GetSineWave100PointAddr(); //波形地址
+  s_strDAC1WaveBuf.waveBufSize  = 100;                            //波形点数  
+
   ConfigDAC1(); //配置DAC1
   ConfigTimer4(799, 719);   //100KHz，计数到800为8ms 
-  ConfigDMA2Ch3ForDAC1(); //配置DMA2通道3
+  ConfigDMA2Ch3ForDAC1(s_strDAC1WaveBuf); //配置DMA2通道3
+}
+
+/*********************************************************************************************************
+* 函数名称：SetDACWave
+* 函数功能：设置DAC波形属性 
+* 输入参数：wave，包括波形地址和点数
+* 输出参数：void
+* 返 回 值：void
+* 创建日期：2018年01月01日
+* 注    意：
+*********************************************************************************************************/
+void SetDACWave(StructDACWave wave)
+{
+  s_strDAC1WaveBuf = wave;  //根据wave设置DAC波形属性	
 }

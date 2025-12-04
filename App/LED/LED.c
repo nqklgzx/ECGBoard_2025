@@ -56,12 +56,12 @@ static  void  ConfigLEDGPIO(void)
   //使能RCC相关时钟
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE); //使能GPIOC的时钟
                                                                                                                  
-  GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_4;           //设置引脚
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;     //设置I/O输出速度
-  GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_Out_PP;     //设置模式
-  GPIO_Init(GPIOC, &GPIO_InitStructure);                //根据参数初始化LED1的GPIO
+//  GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_4;           //设置引脚
+//  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;     //设置I/O输出速度
+//  GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_Out_PP;     //设置模式
+//  GPIO_Init(GPIOC, &GPIO_InitStructure);                //根据参数初始化LED1的GPIO
 
-  GPIO_WriteBit(GPIOC, GPIO_Pin_4, Bit_SET);            //将LED1默认状态设置为点亮
+//  GPIO_WriteBit(GPIOC, GPIO_Pin_4, Bit_SET);            //将LED1默认状态设置为点亮
 
   GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_5;           //设置引脚
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;     //设置I/O输出速度
@@ -108,7 +108,7 @@ void LEDFlicker(u16 cnt)
     s_iCnt = 0;       //重置计数器的计数值为0
 
     //LED1状态取反，实现LED0闪烁
-    GPIO_WriteBit(GPIOC, GPIO_Pin_4, (BitAction)(1 - GPIO_ReadOutputDataBit(GPIOC, GPIO_Pin_4)));
+    //GPIO_WriteBit(GPIOC, GPIO_Pin_4, (BitAction)(1 - GPIO_ReadOutputDataBit(GPIOC, GPIO_Pin_4)));
     
     //LED2状态取反，实现LED1闪烁
     GPIO_WriteBit(GPIOC, GPIO_Pin_5, (BitAction)(1 - GPIO_ReadOutputDataBit(GPIOC, GPIO_Pin_5)));

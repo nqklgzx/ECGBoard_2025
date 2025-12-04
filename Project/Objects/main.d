@@ -26,6 +26,8 @@
 .\objects\main.o: ..\HW\UART1\UART1.h
 .\objects\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\main.o: ..\App\LED\LED.h
+.\objects\main.o: ..\HW\DAC\Wave.h
+.\objects\main.o: ..\APP\ProcHostCmd\ProcHostCmd.h
 .\objects\main.o: ..\APP\PackUnpack\PackUnpack.h
 .\objects\main.o: ..\HW\DAC\DAC.h
 .\objects\main.o: ..\App\SendDataToHost\SendDataToHost.h

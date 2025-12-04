@@ -399,6 +399,11 @@
               <FilePath>..\App\PackUnpack\PackUnpack.c</FilePath>
             </File>
             <File>
+              <FileName>ProcHostCmd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\App\ProcHostCmd\ProcHostCmd.c</FilePath>
+            </File>
+            <File>
               <FileName>SendDataToHost.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\App\SendDataToHost\SendDataToHost.c</FilePath>
@@ -435,6 +440,11 @@
               <FileName>DAC.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\HW\DAC\DAC.c</FilePath>
+            </File>
+            <File>
+              <FileName>Wave.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HW\DAC\Wave.c</FilePath>
             </File>
             <File>
               <FileName>ADC.c</FileName>
