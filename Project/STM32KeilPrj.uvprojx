@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_HD,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\App\Main;..\App\DataType;..\HW\RCC;..\HW\Timer;..\HW\UART1;..\FW\inc;..\ARM\NVIC;..\ARM\SysTick;..\ARM\System;..\App\LED;..\APP\PackUnpack;..\APP\ProcHostCmd;..\HW\DAC;..\HW\ADC;..\App\SendDataToHost;..\App\ECG;..\App\Filter</IncludePath>
+              <IncludePath>..\App\Main;..\App\DataType;..\HW\RCC;..\HW\Timer;..\HW\UART1;..\FW\inc;..\ARM\NVIC;..\ARM\SysTick;..\ARM\System;..\App\LED;..\APP\PackUnpack;..\APP\ProcHostCmd;..\HW\DAC;..\HW\ADC;..\App\SendDataToHost;..\App\ECG;..\App\Filter;..\App\ECG_HeartRate_Calculate</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -417,6 +417,11 @@
               <FileName>Filter.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\App\Filter\Filter.c</FilePath>
+            </File>
+            <File>
+              <FileName>ECG_HeartRate_Calculate.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\App\ECG_HeartRate_Calculate\ECG_HeartRate_Calculate.c</FilePath>
             </File>
           </Files>
         </Group>

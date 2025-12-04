@@ -6,6 +6,7 @@
 ".\objects\senddatatohost.o"
 ".\objects\ecg.o"
 ".\objects\filter.o"
+".\objects\ecg_heartrate_calculate.o"
 ".\objects\rcc.o"
 ".\objects\timer.o"
 ".\objects\queue.o"

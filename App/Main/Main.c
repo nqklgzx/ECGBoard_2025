@@ -34,6 +34,7 @@
 #include "ADC.h"
 #include "ECG.h"
 #include "Filter.h"
+#include "ECG_HeartRate_Calculate.h"
 /*********************************************************************************************************
 *                                              宏定义
 *********************************************************************************************************/
@@ -71,6 +72,7 @@ static  void  InitSoftware(void)
   InitPackUnpack();       //初始化PackUnpack模块
   InitProcHostCmd();      //初始化ProcHostCmd模块
   InitSendDataToHost();   //初始化SendDataToHost模块
+  ECG_Init();   //初始化ECG模块
 }
 
 /*********************************************************************************************************
@@ -112,9 +114,21 @@ static  void  Proc2msTask(void)
   { 
     if(ReadUART1(&uart1RecData, 1)) //读串口接收数据
     {       
-      if(uart1RecData==77)
+      switch(uart1RecData)
       {
-        ECG_Filter_Flag=0;
+        case '7':
+          ECG_Filter_Flag=1-ECG_Filter_Flag;
+        printf("Change ECG_Filter_Flag:%d\n",ECG_Filter_Flag);
+          break;
+        case '8':
+          ECG_StartInfo_Change(1-ECG_StartInfo_Get());
+          printf("Change ECG_StartInfo:%c\n",ECG_StartInfo_Get());
+          break;        
+        case '9':
+          ECG_HR_Send();
+          break;        //ECG_HR_Send
+        default:
+          break;
       }
       ProcHostCmd(uart1RecData);  //处理命令      
     }

@@ -194,7 +194,7 @@ void TIM3_IRQHandler(void)
 **********************************************************************************************************/
 void InitADC(void)
 {
-  ConfigTimer3(799, 719);   //100KHz，计数到800为8ms
+  ConfigTimer3(199, 719);   //100KHz，计数到800为8ms
   ConfigADC1();             //配置ADC1
   ConfigDMA1Ch1();          //配置DMA1的通道1
 

@@ -21,7 +21,8 @@
 #include "DataType.h"
 #include "UART1.h"
 #include <math.h>
-#include "IIR5Filter.h"
+#include "IIR8Filter.h"
+#include <string.h>
 /*********************************************************************************************************
 *                                              宏定义
 *********************************************************************************************************/
@@ -38,7 +39,7 @@ int ECG_Filter_Flag=1;    //默认IIR滤波
 *                                              内部函数声明
 *********************************************************************************************************/
 void ECG_Filter_IIR(double* x, int N);               //滤波
-void Filter(const double* b, const double* a, int m, int n, double* x, int len, double* px, double* py);  //IIR滤波算法
+double  IIRFilterc(const double* b, const double* a, int n, int ns, double* px, double* py, double x);
 
 /*********************************************************************************************************
 *                                              内部函数实现
@@ -60,6 +61,8 @@ void ECG_Filter(double* x, int N)
 {
   switch(ECG_Filter_Flag)
   {
+    case 0:
+      break;
     case 1:
       ECG_Filter_IIR(x,N);
       break;
@@ -82,68 +85,49 @@ void ECG_Filter(double* x, int N)
 void ECG_Filter_IIR(double* x, int N)
 {
     // 初始化各节的缓存（px和py初始化为0）
-  double px0[1] = {0}, py0[1] = {0};  // 节0：m=0→px长度1；n=0→py长度1
-  double px1[3] = {0}, py1[3] = {0};  // 节1：m=2→px长度3；n=2→py长度3
-  double px2[1] = {0}, py2[1] = {0};  // 节2：同上节0
-  double px3[3] = {0}, py3[3] = {0};  // 节3：同上节1
-  double px4[1] = {0}, py4[1] = {0};  // 节4：同上节0
-
-  // 按顺序级联调用Filter函数
-  Filter(NUM[0], DEN[0], NL[0]-1, DL[0]-1, x, N, px0, py0);  // 节0处理
-  Filter(NUM[1], DEN[1], NL[1]-1, DL[1]-1, x, N, px1, py1);  // 节1处理（输入为节0的输出）
-  Filter(NUM[2], DEN[2], NL[2]-1, DL[2]-1, x, N, px2, py2);  // 节2处理
-  Filter(NUM[3], DEN[3], NL[3]-1, DL[3]-1, x, N, px3, py3);  // 节3处理
-  Filter(NUM[4], DEN[4], NL[4]-1, DL[4]-1, x, N, px4, py4);  // 节4处理（最终输出）
+    int n = 2;                  // 每节阶数（二阶节）
+    int ns = MWSPT_NSEC;        // 总节数（9节）
+    double px[50];
+    double py[50];
+    *x=IIRFilterc(&NUM[1][1],&DEN[1][1],n,ns,px,py,*x);
  }
 
 /*********************************************************************************************************
-* 函数名称： Filter
-* 函数功能： 直接性 IIR 数字滤波（一）
-* 输入参数： b  ：双精度实型一维数组，长度为（m+1）。存放滤波器分子多项式的系数 b(i)。
-*            a  ：双精度实型一维数组，长度为（n+1）。存放滤波器分母多项式的系数 a(i)。
-*            m  ：整形变量。滤波器分子多项式的阶数。
-*            n  ：整形变量。滤波器分母多项式的阶数。
-*            x  ：双精度实型一维数组，长度为 len。开始时存放滤波器的输入序列，最后存放滤波器的输出序列；
-*                 分块处理时，它用于表示当前块内的滤波器的输入序列与输出序列。
-*            len：整型变量。输入序列与输出序列的长度；在分块处理时，它用于表示块的长度
-*            px ：双精度实型一维数组，长度为（m+1）。在分块处理时，它用于保存前一块滤波时的（m+1）个输入序列值。
-*            py ：双精度实型一维数组，长度为（n+1）。在分块处理时，它用于保存前一块滤波时的 n 个输出序列值。
+* 函数名称： IIRFilterc
+* 函数功能： 级联型 IIR 数字滤波器
+* 输入参数： b  ：双精度实型二维数组，体积为 ns*（n+1）。存放滤波器分子多项式的系数，
+*                 b[j][i] 表示第 j 个 n 阶节的分子多项式的第 i 个系数。
+*            a  ：双精度实型二维数组，体积为 ns*（n+1）。存放滤波器分母多项式的系数，
+*                 a[j][i] 表示第 j 个 n 阶节的分母多项式的第 i 个系数。
+*            n  ：整型变量。级联型滤波器每节的阶数。
+*            ns ：整形变量。级联型滤波器的 n 阶节数 L。
+*            px ：双精度实型二维数组，体积为 ns*（n+1）。存放历史输入数据，初始状态必须为零。
+*            py ：双精度实型二维数组，体积为 ns*（n+1）。存放历史输入数据，初始状态必须为零。
+*            x  ：双精度实型变量。新的采样值；
 * 输出参数： void
-* 返 回 值： void
-* 创建日期： 2023年10月01日
-* 注    意： 当输入序列 x(k) 很长时，由于计算机内存的限制，常将其分成彼此衔接的若干块进行处理。数组 px 与
-*            py 就是专为分块处理而设置的。
-*            px 用于保存前一块滤波时的（m+1）个输入序列值，即 px[] = {x(k), x(k-1), ..., x(k-m)}；
-*            py 用于保存前一块滤波时的 n 个输出序列值。即 py[] = {y(k-1), y(k-2), ..., y(k-n)}；
-*            通常，我们假定滤波器的初始条件为零，因此数组 px[] 与 py[] 在滤波前都要初始化为零。
+* 返 回 值： 滤波后的采样值
+* 创建日期： 2023年10月10日
+* 注    意：
 *********************************************************************************************************/
-void Filter(const double* b, const double* a, int m, int n, double* x, int len, double* px, double* py)
+double  IIRFilterc(const double* b, const double* a, int n, int ns, double* px, double* py, double x)
 {
-  int k, i;
-  for (k = 0; k < len; k++)
+  int i, j, n1;
+  n1 = n + 1;
+  for (j = 0; j < ns; j++)
   {
-    px[0] = x[k];
-    x[k] = 0.0;
-    for (i = 0; i <= m; i++)
-    {
-      x[k] = x[k] + b[i] * px[i];
-    }
+    px[j * n1 + 0] = x;
+    x = b[j * n1 + 0] * px[j * n1 + 0];
     for (i = 1; i <= n; i++)
     {
-      x[k] = x[k] - a[i] * py[i];
-    }
-    if (fabs(x[k]) > 1.0e10)
-    {
-      return; //This is an unstable filter!
-    }
-    for (i = m; i >= 1; i--)
-    {
-      px[i] = px[i - 1];
+      x += b[j * n1 + i] * px[j * n1 + i] - a[j * n1 + i] * py[j * n1 + i];
     }
     for (i = n; i >= 2; i--)
     {
-      py[i] = py[i - 1];
+      px[j * n1 + i] = px[j * n1 + i - 1];
+      py[j * n1 + i] = py[j * n1 + i - 1];
     }
-    py[1] = x[k];
+    px[j * n1 + 1] = px[j * n1 + 0];
+    py[j * n1 + 1] = x;
   }
+  return x;
 }
