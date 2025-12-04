@@ -337,9 +337,9 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>STM32F10X_HD,USE_STDPERIPH_DRIVER</Define>
+              <Define>STM32F10X_HD,USE_STDPERIPH_DRIVER,ARM_MATH_CM3</Define>
               <Undefine></Undefine>
-              <IncludePath>..\App\Main;..\App\DataType;..\HW\RCC;..\HW\Timer;..\HW\UART1;..\FW\inc;..\ARM\NVIC;..\ARM\SysTick;..\ARM\System;..\App\LED;..\APP\PackUnpack;..\APP\ProcHostCmd;..\HW\DAC;..\HW\ADC;..\App\SendDataToHost;..\App\ECG;..\App\Filter;..\App\ECG_HeartRate_Calculate</IncludePath>
+              <IncludePath>..\App\Main;..\App\DataType;..\HW\RCC;..\HW\Timer;..\HW\UART1;..\FW\inc;..\ARM\NVIC;..\ARM\SysTick;..\ARM\System;..\App\LED;..\APP\PackUnpack;..\APP\ProcHostCmd;..\HW\DAC;..\HW\ADC;..\App\SendDataToHost;..\App\ECG;..\App\Filter;..\App\ECG_HeartRate_Calculate;..\ARM\DSPlib\Include</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -422,6 +422,16 @@
               <FileName>ECG_HeartRate_Calculate.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\App\ECG_HeartRate_Calculate\ECG_HeartRate_Calculate.c</FilePath>
+            </File>
+            <File>
+              <FileName>Filter1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\App\Filter\Filter1.c</FilePath>
+            </File>
+            <File>
+              <FileName>ECG_HR_TimeDomain.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\App\ECG_HeartRate_Calculate\ECG_HR_TimeDomain.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -561,6 +571,11 @@
               <FileName>startup_stm32f10x_hd.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\ARM\System\startup_stm32f10x_hd.s</FilePath>
+            </File>
+            <File>
+              <FileName>arm_cortexM3l_math.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\ARM\DSPlib\arm_cortexM3l_math.lib</FilePath>
             </File>
           </Files>
         </Group>

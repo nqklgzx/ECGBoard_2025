@@ -35,3 +35,5 @@
 .\objects\main.o: ..\App\ECG\ECG.h
 .\objects\main.o: ..\App\Filter\Filter.h
 .\objects\main.o: ..\App\ECG_HeartRate_Calculate\ECG_HeartRate_Calculate.h
+.\objects\main.o: ..\App\Filter\Filter1.h
+.\objects\main.o: ..\App\ECG_HeartRate_Calculate\ECG_HR_TimeDomain.h

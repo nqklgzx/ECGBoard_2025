@@ -35,6 +35,10 @@
 #include "ECG.h"
 #include "Filter.h"
 #include "ECG_HeartRate_Calculate.h"
+
+#include "Filter1.h" 
+#include "ECG_HR_TimeDomain.h"
+
 /*********************************************************************************************************
 *                                              宏定义
 *********************************************************************************************************/
@@ -73,6 +77,8 @@ static  void  InitSoftware(void)
   InitProcHostCmd();      //初始化ProcHostCmd模块
   InitSendDataToHost();   //初始化SendDataToHost模块
   ECG_Init();   //初始化ECG模块
+  FilterInit();
+  ECG_HR_TimeDomain_Init();
 }
 
 /*********************************************************************************************************
@@ -117,8 +123,13 @@ static  void  Proc2msTask(void)
       switch(uart1RecData)
       {
         case '7':
-          ECG_Filter_Flag=1-ECG_Filter_Flag;
-        printf("Change ECG_Filter_Flag:%d\n",ECG_Filter_Flag);
+          if(ECG_Filter_Flag<3) 
+          {
+            ECG_Filter_Flag++;      
+            printf("[[4,%d]]\r\n",ECG_Filter_Flag); //设置测量结果显示
+          }
+          else ECG_Filter_Flag = 0;
+          printf("Change ECG_Filter_Flag:%d\n",ECG_Filter_Flag);
           break;
         case '8':
           ECG_StartInfo_Change(1-ECG_StartInfo_Get());

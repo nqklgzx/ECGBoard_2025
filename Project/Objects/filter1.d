@@ -1,0 +1,13 @@
+.\objects\filter1.o: ..\App\Filter\Filter1.c
+.\objects\filter1.o: ..\App\Filter\Filter1.h
+.\objects\filter1.o: ..\HW\UART1\UART1.h
+.\objects\filter1.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\filter1.o: ..\App\DataType\DataType.h
+.\objects\filter1.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
+.\objects\filter1.o: ..\ARM\DSPlib\Include\arm_math.h
+.\objects\filter1.o: ..\ARM\DSPlib\Include\core_cm3.h
+.\objects\filter1.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\filter1.o: ..\ARM\DSPlib\Include\core_cmInstr.h
+.\objects\filter1.o: ..\ARM\DSPlib\Include\cmsis_armcc.h
+.\objects\filter1.o: ..\ARM\DSPlib\Include\core_cmFunc.h
+.\objects\filter1.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

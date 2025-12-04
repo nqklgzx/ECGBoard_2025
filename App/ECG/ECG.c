@@ -26,6 +26,7 @@
 #include "Filter.h" 
 #include "stm32f10x_conf.h"
 #include "ECG_HeartRate_Calculate.h"
+#include "ECG_HR_TimeDomain.h"
 
 /*********************************************************************************************************
 *                                              ∫Í∂®“Â

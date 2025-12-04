@@ -1,0 +1,14 @@
+.\objects\ecg_hr_timedomain.o: ..\App\ECG_HeartRate_Calculate\ECG_HR_TimeDomain.c
+.\objects\ecg_hr_timedomain.o: ..\App\ECG_HeartRate_Calculate\ECG_HR_TimeDomain.h
+.\objects\ecg_hr_timedomain.o: ..\ARM\DSPlib\Include\arm_math.h
+.\objects\ecg_hr_timedomain.o: ..\ARM\DSPlib\Include\core_cm3.h
+.\objects\ecg_hr_timedomain.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\ecg_hr_timedomain.o: ..\ARM\DSPlib\Include\core_cmInstr.h
+.\objects\ecg_hr_timedomain.o: ..\ARM\DSPlib\Include\cmsis_armcc.h
+.\objects\ecg_hr_timedomain.o: ..\ARM\DSPlib\Include\core_cmFunc.h
+.\objects\ecg_hr_timedomain.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\objects\ecg_hr_timedomain.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
+.\objects\ecg_hr_timedomain.o: ..\App\ECG\ECG.h
+.\objects\ecg_hr_timedomain.o: ..\App\DataType\DataType.h
+.\objects\ecg_hr_timedomain.o: ..\HW\UART1\UART1.h
+.\objects\ecg_hr_timedomain.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h

@@ -20,12 +20,15 @@
 #include "Filter.h"
 #include "DataType.h"
 #include "UART1.h"
-#include <math.h>
+#include "math.h"
+
 #include "50HzIIRFilter.h"
 #include "100HzIIRFilter.h"
 #include "200HzIIRFilter.h"
 #include "LowerIIRFilter3.h"
-#include <string.h>
+
+#include "Filter1.h" 
+
 /*********************************************************************************************************
 *                                              宏定义
 *********************************************************************************************************/
@@ -37,13 +40,14 @@
 /*********************************************************************************************************
 *                                              内部变量
 *********************************************************************************************************/
-int ECG_Filter_Flag=1;    //默认IIR滤波
+int ECG_Filter_Flag=0;    //默认无滤波
 /*********************************************************************************************************
 *                                              内部函数声明
 *********************************************************************************************************/
 void ECG_Filter_IIR(double* x);               //滤波
 double  IIRFilterc(const double* b, const double* a, int n, int ns, double* px, double* py, double x);
 void BaselineFilterTask(float *dataAddr);                  
+void ECG_Filter_Auto_IIR(double* x);
 
 /*********************************************************************************************************
 *                                              内部函数实现
@@ -70,10 +74,56 @@ void ECG_Filter(double* x)
     case 1:
       ECG_Filter_IIR(x);
       break;
+    case 2:
+      ECG_Filter_Auto_IIR(x);
+      break;
     default:
       printf("ERROR:滤波器选择错误");
       break;
   }
+}
+
+/*********************************************************************************************************
+* 函数名称: ECG_Filter_IIR
+* 函数功能: 心电IIR滤波
+* 输入参数: double* x ：输入数据的地址
+            int N ：数据个数
+* 输出参数: void
+* 返 回 值: void
+* 创建日期: 2025年11月26日
+* 注    意:
+*********************************************************************************************************/
+void ECG_Filter_Auto_IIR(double* x)
+{
+//  double x_temp = *x;
+//  // 初始化各节的缓存（px和py初始化为0）：50Hz陷波器
+//  int ECG_50Hz_n = 2;                  // 每节阶数
+//  int ECG_50Hz_ns = 1;        // 总节数
+//  static double s_ECG_50Hz_arrPx[12] = {0};
+//  static double s_ECG_50Hz_arrPy[12] = {0};
+//  
+//    // 初始化各节的缓存（px和py初始化为0）：100Hz陷波器
+//  int ECG_100Hz_n = 2;                  // 每节阶数
+//  int ECG_100Hz_ns = 1;        // 总节数
+//  static double s_ECG_100Hz_arrPx[12] = {0};
+//  static double s_ECG_100Hz_arrPy[12] = {0};
+
+//  // 初始化各节的缓存（px和py初始化为0）：100Hz陷波器
+//  int ECG_200Hz_n = 2;                  // 每节阶数
+//  int ECG_200Hz_ns = 1;        // 总节数
+//  static double s_ECG_200Hz_arrPx[12] = {0};
+//  static double s_ECG_200Hz_arrPy[12] = {0};
+
+//  // 初始化各节的缓存（px和py初始化为0）：50Hz低通滤波器
+//  int ECG_Lower_n = 2;                  // 每节阶数
+//  int ECG_Lower_ns = 1;        // 总节数
+//  static double s_ECG_Lower_arrPx[100] = {0};
+//  static double s_ECG_Lower_arrPy[100] = {0};
+
+  NotchFilterTask((float*)x);
+  EMGFilterTask((float*)x);
+  BaselineFilterTask((float*)x);     
+//  *x = x_temp;
 }
 
 /*********************************************************************************************************
