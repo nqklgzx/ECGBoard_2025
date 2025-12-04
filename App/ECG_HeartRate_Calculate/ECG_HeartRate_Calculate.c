@@ -140,57 +140,19 @@ void ECG_HR_Cal(int ECG_Peak_TM_DIffer_Count)
     ECG_HeartRate = -1;  // 无效值标记
     return;
   }
-//  for(i = 0;i<ECG_Peak_TM_DIffer_Count;i++)
-//  {
-//    ECG_TM_SUM += ECG_Peak_TM_DIffer[i];
-//  }
-//  
-//  if(ECG_TM_SUM <= 0)
-//  {
-//    ECG_HeartRate = -1;
-//    return;
-//  }
-//  ECG_HeartRate = 60.0 / ((ECG_TM_SUM / ECG_Peak_TM_DIffer_Count) * (0.002 * ECG_ADC_TM));
-  ECG_TM_SUM = GetMidValue1((float *)ECG_Peak_TM_DIffer,ECG_Peak_TM_DIffer_Count-1);
-  ECG_HeartRate = 60.0 / (ECG_TM_SUM * (0.002 * ECG_ADC_TM));
+  for(i = 0;i<ECG_Peak_TM_DIffer_Count;i++)
+  {
+    ECG_TM_SUM += ECG_Peak_TM_DIffer[i];
+  }
+  
+  if(ECG_TM_SUM <= 0)
+  {
+    ECG_HeartRate = -1;
+    return;
+  }
+  ECG_HeartRate = 60.0 / ((ECG_TM_SUM / ECG_Peak_TM_DIffer_Count) * (0.002 * ECG_ADC_TM));
 }
 
-/*********************************************************************************************************
-* 函数名称：GetMidValue
-* 函数功能：获取数据的中值
-* 输入参数：data-数据缓冲区,len-数据长度
-* 输出参数：void
-* 返 回 值：void
-* 创建日期：2024年01月22日
-* 注  意：  
-**********************************************************************************************************/
-float GetMidValue1(float* data,unsigned short len)
-{
-	unsigned char i=0,j=0;
-	float temp=0;
-	float mid=0;
-	
-	if(len==0) return data[0];
-	
-	//冒泡排序
-	for(i=0;i<len-1;i++)
-	{
-		for(j=0;j<len-i-1;j++)
-		{
-			if(data[j]>data[j+1])
-			{
-				temp=data[j+1];
-				data[j+1]=data[j];
-				data[j]=temp;
-			}
-		}
-	}
-	
-	//获取中值
-	(len%2==0)?(mid=(data[len/2] + data[len/2+1])/2):(mid=data[len/2]);
-	
-	return mid;
-}
 /*********************************************************************************************************
 *                                              API函数实现
 *********************************************************************************************************/
@@ -229,7 +191,6 @@ void ECG_HR_Send()
 
 {
   //printf("INFO:ECG_HeartRate:%lf",ECG_HeartRate);
-  //printf("{{2,HR}}\r\n");    //设置参数名显示
   printf("[[2,%lf]]\r\n",ECG_HeartRate); //设置测量结果显示
   
 }

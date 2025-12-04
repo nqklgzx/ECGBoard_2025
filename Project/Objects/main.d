@@ -26,6 +26,8 @@
 .\objects\main.o: ..\HW\UART1\UART1.h
 .\objects\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\main.o: ..\App\LED\LED.h
+.\objects\main.o: ..\App\KeyOne\KeyOne.h
+.\objects\main.o: ..\App\KeyOne\ProcKeyOne.h
 .\objects\main.o: ..\HW\DAC\Wave.h
 .\objects\main.o: ..\APP\ProcHostCmd\ProcHostCmd.h
 .\objects\main.o: ..\APP\PackUnpack\PackUnpack.h
@@ -35,5 +37,3 @@
 .\objects\main.o: ..\App\ECG\ECG.h
 .\objects\main.o: ..\App\Filter\Filter.h
 .\objects\main.o: ..\App\ECG_HeartRate_Calculate\ECG_HeartRate_Calculate.h
-.\objects\main.o: ..\App\Filter\Filter1.h
-.\objects\main.o: ..\App\ECG_HeartRate_Calculate\ECG_HR_TimeDomain.h

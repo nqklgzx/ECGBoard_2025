@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_HD,USE_STDPERIPH_DRIVER,ARM_MATH_CM3</Define>
               <Undefine></Undefine>
-              <IncludePath>..\App\Main;..\App\DataType;..\HW\RCC;..\HW\Timer;..\HW\UART1;..\FW\inc;..\ARM\NVIC;..\ARM\SysTick;..\ARM\System;..\App\LED;..\APP\PackUnpack;..\APP\ProcHostCmd;..\HW\DAC;..\HW\ADC;..\App\SendDataToHost;..\App\ECG;..\App\Filter;..\App\ECG_HeartRate_Calculate;..\ARM\DSPlib\Include</IncludePath>
+              <IncludePath>..\App\Main;..\App\DataType;..\HW\RCC;..\HW\Timer;..\HW\UART1;..\FW\inc;..\ARM\NVIC;..\ARM\SysTick;..\ARM\System;..\App\LED;..\APP\PackUnpack;..\APP\ProcHostCmd;..\HW\DAC;..\HW\ADC;..\App\SendDataToHost;..\App\ECG;..\App\Filter;..\App\ECG_HeartRate_Calculate;..\ARM\DSPlib\Include;..\App\KeyOne</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -424,14 +424,14 @@
               <FilePath>..\App\ECG_HeartRate_Calculate\ECG_HeartRate_Calculate.c</FilePath>
             </File>
             <File>
-              <FileName>Filter1.c</FileName>
+              <FileName>ProcKeyOne.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\App\Filter\Filter1.c</FilePath>
+              <FilePath>..\App\KeyOne\ProcKeyOne.c</FilePath>
             </File>
             <File>
-              <FileName>ECG_HR_TimeDomain.c</FileName>
+              <FileName>KeyOne.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\App\ECG_HeartRate_Calculate\ECG_HR_TimeDomain.c</FilePath>
+              <FilePath>..\App\KeyOne\KeyOne.c</FilePath>
             </File>
           </Files>
         </Group>

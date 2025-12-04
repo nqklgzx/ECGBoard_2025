@@ -26,7 +26,6 @@
 #include "Filter.h" 
 #include "stm32f10x_conf.h"
 #include "ECG_HeartRate_Calculate.h"
-#include "ECG_HR_TimeDomain.h"
 
 /*********************************************************************************************************
 *                                              宏定义
@@ -46,7 +45,7 @@
 /*********************************************************************************************************
 *                                              内部变量
 *********************************************************************************************************/
-double ECG_WaveData[ECG_ADC_arrMAX] = {0}; //初始化数组
+float ECG_WaveData[ECG_ADC_arrMAX] = {0}; //初始化数组
 u16 WAVE_NUM = 0;         //波形数据包的点计数器
 static u8 ECG_START_INFO = ECG_STOP;           //上位机发来的命令（待补充）
 /*********************************************************************************************************
@@ -142,7 +141,7 @@ static u8 ECG_Start_Check()
 static void ECG_ADC_Read()
 {
   u16 adcData;                      //队列数据
-  double  waveData;                  //波形数据
+  float  waveData;                  //波形数据
   
   static u8 ECG_TM_counter = 0;            //计数器
   ECG_TM_counter++;                        //计数增加
@@ -155,7 +154,6 @@ static void ECG_ADC_Read()
       waveData = adcData * 1.0;      //计算获取点的位置
       //printf("%lf\n",waveData);      //测试：是否能取出信号；正确是输出心电电压信号
       ECG_WaveData[WAVE_NUM] = waveData;  //存放到数组
-      WAVE_NUM++;                          //波形数据包的点计数器加1操作
     }
     ECG_TM_counter = 0;                              //准备下次的循环
   }
@@ -178,7 +176,7 @@ static void ECG_Wave_Send()
 
   if(ECG_TM_counter >= ECG_ADC_TM)     //达到2ms
   {  
-    printf("%lf\n",ECG_WaveData[WAVE_NUM-1]);
+    printf("%f\n",ECG_WaveData[WAVE_NUM]);
     ECG_TM_counter = 0;                              //准备下次的循环
   }
 }
@@ -228,6 +226,9 @@ void ECG_Init()
 {
   ConfigECGGPIO();
   ECG_START_INFO = ECG_STOP;
+  printf("{{2,HR}}\r\n");
+  printf("{{3,HRFlag}}\r\n");
+  printf("{{4,Filter}}\r\n");
 }
 
 /*********************************************************************************************************
@@ -241,7 +242,7 @@ void ECG_Init()
 *********************************************************************************************************/
 void ECG_Task()
 {  
-      static int test_point = 0;
+  static u8 test_point = '0';
   if(ECG_LEADOFF_Check()==TRUE)//检查导联脱落（PA7）
   {
     return;    
@@ -254,23 +255,25 @@ void ECG_Task()
   
   ECG_ADC_Read();          //存入单个读取的数据，返回目前数组数据量
   
-  ECG_Filter(&ECG_WaveData[WAVE_NUM-1]);                   //滤波
+  ECG_Filter(&ECG_WaveData[WAVE_NUM]);                   //滤波
 
   ECG_Wave_Send();                //发送数据
   
-  if(WAVE_NUM>=ECG_ADC_arrMAX)      //当存满了
+  WAVE_NUM++;                          //波形数据包的点计数器加1操作
+  
+  if(WAVE_NUM >= ECG_ADC_arrMAX)      //当存满了
   {
     ECG_HeartRate_Calculate();      //计算心率
     WAVE_NUM=0;
     switch(test_point)
     {
-      case 0:
-        printf("[[3,%d]]\r\n",test_point); //设置测量结果显示
-        test_point = 1-test_point;
+      case '0':
+        test_point ++;
+        printf("[[3,%c]]\r\n",test_point); //设置测量结果显示
       break;
-      case 1:
-        printf("[[3,%d]]\r\n",test_point); //设置测量结果显示
-        test_point = 1-test_point;
+      case '1':
+        test_point = '0';
+        printf("[[3,%c]]\r\n",test_point); //设置测量结果显示
       break;
     }
   }

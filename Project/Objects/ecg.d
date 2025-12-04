@@ -27,4 +27,3 @@
 .\objects\ecg.o: ..\FW\inc\stm32f10x_usart.h
 .\objects\ecg.o: ..\FW\inc\misc.h
 .\objects\ecg.o: ..\App\ECG_HeartRate_Calculate\ECG_HeartRate_Calculate.h
-.\objects\ecg.o: ..\App\ECG_HeartRate_Calculate\ECG_HR_TimeDomain.h
