@@ -7,3 +7,4 @@
 .\objects\ecg.o: ..\APP\ProcHostCmd\ProcHostCmd.h
 .\objects\ecg.o: ..\APP\PackUnpack\PackUnpack.h
 .\objects\ecg.o: ..\App\SendDataToHost\SendDataToHost.h
+.\objects\ecg.o: ..\App\Filter\Filter.h

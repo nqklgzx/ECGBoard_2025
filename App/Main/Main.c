@@ -33,6 +33,7 @@
 #include "SendDataToHost.h"
 #include "ADC.h"
 #include "ECG.h"
+#include "Filter.h"
 /*********************************************************************************************************
 *                                              宏定义
 *********************************************************************************************************/
@@ -111,6 +112,10 @@ static  void  Proc2msTask(void)
   { 
     if(ReadUART1(&uart1RecData, 1)) //读串口接收数据
     {       
+      if(uart1RecData==77)
+      {
+        ECG_Filter_Flag=0;
+      }
       ProcHostCmd(uart1RecData);  //处理命令      
     }
     ECG_Task();
