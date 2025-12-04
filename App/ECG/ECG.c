@@ -150,7 +150,8 @@ static void ECG_ADC_Read()
   {
     if(ReadADCBuf(&adcData))        //从缓存队列中取出1个数据
     {
-      waveData = (adcData * 3.3) / 4095;      //计算获取点的位置
+      //waveData = (adcData * 3.3) / 4095;      //计算获取点的位置
+      waveData = adcData * 1.0;      //计算获取点的位置
       //printf("%lf\n",waveData);      //测试：是否能取出信号；正确是输出心电电压信号
       ECG_WaveData[WAVE_NUM] = waveData;  //存放到数组
       WAVE_NUM++;                          //波形数据包的点计数器加1操作
@@ -252,7 +253,7 @@ void ECG_Task()
   
   ECG_ADC_Read();          //存入单个读取的数据，返回目前数组数据量
   
-  ECG_Filter(&ECG_WaveData[WAVE_NUM-1],1);                   //滤波
+  ECG_Filter(&ECG_WaveData[WAVE_NUM-1]);                   //滤波
 
   ECG_Wave_Send();                //发送数据
   

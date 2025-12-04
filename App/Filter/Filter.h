@@ -37,7 +37,7 @@ extern int ECG_Filter_Flag;    //默认IIR滤波
 *                                              API函数声明
 *********************************************************************************************************/
 //函数声明
-void ECG_Filter(double* x, int N);
+void ECG_Filter(double* x);
 
 
 #endif

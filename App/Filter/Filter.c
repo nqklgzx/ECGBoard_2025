@@ -21,7 +21,10 @@
 #include "DataType.h"
 #include "UART1.h"
 #include <math.h>
-#include "IIR8Filter.h"
+#include "50HzIIRFilter.h"
+#include "100HzIIRFilter.h"
+#include "200HzIIRFilter.h"
+#include "LowerIIRFilter3.h"
 #include <string.h>
 /*********************************************************************************************************
 *                                              宏定义
@@ -38,8 +41,9 @@ int ECG_Filter_Flag=1;    //默认IIR滤波
 /*********************************************************************************************************
 *                                              内部函数声明
 *********************************************************************************************************/
-void ECG_Filter_IIR(double* x, int N);               //滤波
+void ECG_Filter_IIR(double* x);               //滤波
 double  IIRFilterc(const double* b, const double* a, int n, int ns, double* px, double* py, double x);
+void BaselineFilterTask(float *dataAddr);                  
 
 /*********************************************************************************************************
 *                                              内部函数实现
@@ -57,14 +61,14 @@ double  IIRFilterc(const double* b, const double* a, int n, int ns, double* px, 
 * 创建日期: 2025年11月26日
 * 注    意:
 *********************************************************************************************************/
-void ECG_Filter(double* x, int N)
+void ECG_Filter(double* x)
 {
   switch(ECG_Filter_Flag)
   {
     case 0:
       break;
     case 1:
-      ECG_Filter_IIR(x,N);
+      ECG_Filter_IIR(x);
       break;
     default:
       printf("ERROR:滤波器选择错误");
@@ -82,15 +86,43 @@ void ECG_Filter(double* x, int N)
 * 创建日期: 2025年11月26日
 * 注    意:
 *********************************************************************************************************/
-void ECG_Filter_IIR(double* x, int N)
+void ECG_Filter_IIR(double* x)
 {
-    // 初始化各节的缓存（px和py初始化为0）
-    int n = 2;                  // 每节阶数（二阶节）
-    int ns = MWSPT_NSEC;        // 总节数（9节）
-    double px[50];
-    double py[50];
-    *x=IIRFilterc(&NUM[1][1],&DEN[1][1],n,ns,px,py,*x);
- }
+  double x_temp = *x;
+  // 初始化各节的缓存（px和py初始化为0）：50Hz陷波器
+  int ECG_50Hz_n = 2;                  // 每节阶数
+  int ECG_50Hz_ns = 1;        // 总节数
+  static double s_ECG_50Hz_arrPx[12] = {0};
+  static double s_ECG_50Hz_arrPy[12] = {0};
+  
+    // 初始化各节的缓存（px和py初始化为0）：100Hz陷波器
+  int ECG_100Hz_n = 2;                  // 每节阶数
+  int ECG_100Hz_ns = 1;        // 总节数
+  static double s_ECG_100Hz_arrPx[12] = {0};
+  static double s_ECG_100Hz_arrPy[12] = {0};
+
+  // 初始化各节的缓存（px和py初始化为0）：100Hz陷波器
+  int ECG_200Hz_n = 2;                  // 每节阶数
+  int ECG_200Hz_ns = 1;        // 总节数
+  static double s_ECG_200Hz_arrPx[12] = {0};
+  static double s_ECG_200Hz_arrPy[12] = {0};
+
+  // 初始化各节的缓存（px和py初始化为0）：50Hz低通滤波器
+  int ECG_Lower_n = 2;                  // 每节阶数
+  int ECG_Lower_ns = 1;        // 总节数
+  static double s_ECG_Lower_arrPx[100] = {0};
+  static double s_ECG_Lower_arrPy[100] = {0};
+
+  x_temp=IIRFilterc((double*)&ECG_50Hz_NUM,(double*)&ECG_50Hz_DEN,ECG_50Hz_n,ECG_50Hz_ns,s_ECG_50Hz_arrPx,s_ECG_50Hz_arrPy,x_temp);
+  x_temp=IIRFilterc((double*)&ECG_100Hz_NUM,(double*)&ECG_100Hz_DEN,ECG_100Hz_n,ECG_100Hz_ns,s_ECG_100Hz_arrPx,s_ECG_100Hz_arrPy,x_temp);
+  x_temp=IIRFilterc((double*)&ECG_200Hz_NUM,(double*)&ECG_200Hz_DEN,ECG_200Hz_n,ECG_200Hz_ns,s_ECG_200Hz_arrPx,s_ECG_200Hz_arrPy,x_temp);
+
+  x_temp=IIRFilterc((double*)&ECG_Lower_NUM,(double*)&ECG_Lower_DEN,ECG_Lower_n,ECG_Lower_ns,s_ECG_Lower_arrPx,s_ECG_Lower_arrPy,x_temp);
+  
+  BaselineFilterTask((float*)&x_temp);                  
+
+  *x = x_temp;
+}
 
 /*********************************************************************************************************
 * 函数名称： IIRFilterc
@@ -130,4 +162,36 @@ double  IIRFilterc(const double* b, const double* a, int n, int ns, double* px, 
     py[j * n1 + 1] = x;
   }
   return x;
+}
+
+/*********************************************************************************************************
+* 函数名称：BaselineFilterTask
+* 函数功能：滤波器模块任务
+* 输入参数：滤波数据的地址
+* 输出参数：void
+* 返 回 值：void
+* 创建日期：2024年01月22日
+* 注  意：  采用IIR型滤波器
+**********************************************************************************************************/
+void BaselineFilterTask(float *dataAddr)                  
+{
+	static float b1[3],a1[3];  //第一节滤波系数 
+	static float b2[3],a2[3];  //第二节滤波系数
+  static float bufX[3],bufY[3];   
+	
+	b1[0]=1;b1[1]=-2;b1[2]=1;          //滤波器分子系数
+	a1[0]=1;a1[1]=-1.990271241;a1[2]= 0.99042;      //滤波器分母系数	
+	b2[0]=1;b2[1]=-2;b2[2]=1;          //滤波器分子系数
+	a2[0]=1;a2[1]=-1.9768913542871;a2[2]= 0.9770474536;      //滤波器分母系数
+  
+	bufX[0] = *dataAddr;
+	
+	bufY[0] = -a1[1]*bufY[1]-a1[2]*bufY[2]+bufX[0]+b1[1]*bufX[1]+bufX[2];//第一节
+	
+	bufY[0] = -a2[1]*bufY[1]-a2[2]*bufY[2]+bufX[0]+b2[1]*bufX[1]+bufX[2];//第二节
+	
+	bufY[2]=bufY[1];bufY[1]=bufY[0];
+	bufX[2]=bufX[1];bufX[1]=bufX[0];
+	
+	*dataAddr = bufY[0];
 }
