@@ -33,18 +33,19 @@
 /*********************************************************************************************************
 *                                              内部变量
 *********************************************************************************************************/
-static double ECG_Peak_Index[ECG_Statistic_Num]={0};
-static double ECG_Peak_TM_DIffer[ECG_Statistic_Num]={0};
-static double ECG_HeartRate = 0;
+static float ECG_Peak_Index[ECG_Statistic_Num]={0};
+static float ECG_Peak_TM_DIffer[ECG_Statistic_Num]={0};
+static float ECG_HeartRate = 0;
 
 /*********************************************************************************************************
 *                                              内部函数声明
 *********************************************************************************************************/
-double ECG_HR_FindReference(void);
-int ECG_HR_FindPeak(double ECG_Reference);
+float ECG_HR_FindReference(void);
+int ECG_HR_FindPeak(float ECG_Reference);
 int ECG_HR_AverageTime(int ECG_PeakNum);
-void ECG_HR_Cal(int ECG_Peak_TM_DIffer_Count);
+void ECG_HR_Cal(float ECG_HR_TM_Mid);
 float GetMidValue1(float* data,unsigned short len);
+float ECG_HR_FindMid(int ECG_PeakNum);
 
 /*********************************************************************************************************
 *                                              内部函数实现
@@ -58,10 +59,10 @@ float GetMidValue1(float* data,unsigned short len);
 * 创建日期: 2025年11月26日
 * 注    意:
 *********************************************************************************************************/
-double ECG_HR_FindReference()
+float ECG_HR_FindReference()
 { 
-  double Maximum = ECG_WaveData[0];
-  double ECG_Reference=0;
+  float Maximum = ECG_WaveData[0];
+  float ECG_Reference=0;
   int i = 0;
   for(i = 0;i < ECG_ADC_arrMAX ; i++)
   {
@@ -82,7 +83,7 @@ double ECG_HR_FindReference()
 * 创建日期: 2025年11月26日
 * 注    意:
 *********************************************************************************************************/
-int ECG_HR_FindPeak(double ECG_Reference)
+int ECG_HR_FindPeak(float ECG_Reference)
 {
   int ECG_PeakNum = 0;
   int i = 0;
@@ -103,25 +104,47 @@ int ECG_HR_FindPeak(double ECG_Reference)
 }
 
 /*********************************************************************************************************
-* 函数名称: ECG_HR_AverageTime
-* 函数功能: 心电心率计算平均时间每次
+* 函数名称: ECG_HR_Send
+* 函数功能: 心电心率计算
 * 输入参数: void
 * 输出参数: void
 * 返 回 值: void
 * 创建日期: 2025年11月26日
 * 注    意:
 *********************************************************************************************************/
-int ECG_HR_AverageTime(int ECG_PeakNum)
+float ECG_HR_FindMid(int ECG_PeakNum)
 {
-  int ECG_Peak_TM_DIffer_Count = ECG_PeakNum;
-  int i = 0;
-  for(i = 0;i < ECG_PeakNum - 1 ; i++)        //由于i+1，ECG_PeakNum必须-1
+  float ECG_HR_TM_Mid = 0;
+  int ECG_Peak_TM_DIffer_Count = ECG_PeakNum - 1;
+  int i = 0,j = 0,k = 0,temp = 0;
+  for(i = 0;i < ECG_PeakNum - 1 ; i++)        //由于两两相减，ECG_PeakNum必须-1
   {
     ECG_Peak_TM_DIffer[i] = ECG_Peak_Index[i+1] - ECG_Peak_Index[i];
   }
-  return ECG_Peak_TM_DIffer_Count;
+  
+  for(j = 0;j < ECG_Peak_TM_DIffer_Count-1;j++)
+  {
+    for(k = 0;k < ECG_Peak_TM_DIffer_Count - 1 - j;k++)
+    {
+    if (ECG_Peak_TM_DIffer[j] > ECG_Peak_TM_DIffer[j+1])//这是升序排法，前一个数和后一个数比较，如果前数大则与后一个数换位置
+     {
+        temp = ECG_Peak_TM_DIffer[j];
+        ECG_Peak_TM_DIffer[j] = ECG_Peak_TM_DIffer[j+1];
+        ECG_Peak_TM_DIffer[j+1] = temp;
+		 }
+    }
+  }
+	//获取中值
+  if(ECG_Peak_TM_DIffer_Count%2==0)
+  {
+    ECG_HR_TM_Mid = ECG_Peak_TM_DIffer[ECG_Peak_TM_DIffer_Count/2];
+  }
+  else
+  {
+    ECG_HR_TM_Mid=(ECG_Peak_TM_DIffer[ECG_Peak_TM_DIffer_Count/2] + ECG_Peak_TM_DIffer[ECG_Peak_TM_DIffer_Count/2+1])/2;
+  }
+  return ECG_HR_TM_Mid;
 }
-
 /*********************************************************************************************************
 * 函数名称: ECG_HR_Cal
 * 函数功能: 心电心率计算
@@ -131,26 +154,9 @@ int ECG_HR_AverageTime(int ECG_PeakNum)
 * 创建日期: 2025年11月26日
 * 注    意:
 *********************************************************************************************************/
-void ECG_HR_Cal(int ECG_Peak_TM_DIffer_Count)
+void ECG_HR_Cal(float ECG_HR_TM_Mid)
 {
-  int ECG_TM_SUM = 0;
-  int i = 0;
-  if(ECG_Peak_TM_DIffer_Count <= 1)  // 至少需要2个峰值才能计算间隔
-  {
-    ECG_HeartRate = -1;  // 无效值标记
-    return;
-  }
-  for(i = 0;i<ECG_Peak_TM_DIffer_Count;i++)
-  {
-    ECG_TM_SUM += ECG_Peak_TM_DIffer[i];
-  }
-  
-  if(ECG_TM_SUM <= 0)
-  {
-    ECG_HeartRate = -1;
-    return;
-  }
-  ECG_HeartRate = 60.0 / ((ECG_TM_SUM / ECG_Peak_TM_DIffer_Count) * (0.002 * ECG_ADC_TM));
+  ECG_HeartRate = 60.0 / (ECG_HR_TM_Mid * (0.002 * ECG_ADC_TM));
 }
 
 /*********************************************************************************************************
@@ -169,12 +175,11 @@ void ECG_HeartRate_Calculate()
 {
   double ECG_Reference = 0;
   int ECG_PeakNum = 0;
-  int ECG_Peak_TM_DIffer_Count = 0;
-  
+  float ECG_HR_TM_Mid = 0;
   ECG_Reference = ECG_HR_FindReference();
   ECG_PeakNum = ECG_HR_FindPeak(ECG_Reference);
-  ECG_Peak_TM_DIffer_Count = ECG_HR_AverageTime(ECG_PeakNum);
-  ECG_HR_Cal(ECG_Peak_TM_DIffer_Count);
+  ECG_HR_TM_Mid = ECG_HR_FindMid(ECG_PeakNum);
+  ECG_HR_Cal(ECG_HR_TM_Mid);
   ECG_HR_Send();
 }
 
@@ -191,7 +196,7 @@ void ECG_HR_Send()
 
 {
   //printf("INFO:ECG_HeartRate:%lf",ECG_HeartRate);
-  printf("[[2,%lf]]\r\n",ECG_HeartRate); //设置测量结果显示
+  printf("[[2,%f]]\r\n",ECG_HeartRate); //设置测量结果显示
   
 }
 
